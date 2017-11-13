@@ -2,3 +2,7 @@ flask
 db
 flask_wtf
 unittest
+wtforms
+requests
+json
+flask_sqlalchemy

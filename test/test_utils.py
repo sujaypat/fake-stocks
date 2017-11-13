@@ -1,7 +1,7 @@
 import unittest
 
 
-class TestAPIMethods(unittest.TestCase):
+class TestUtilMethods(unittest.TestCase):
 
     def test_index(self):
         pass
