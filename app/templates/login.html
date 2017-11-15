@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Sign In</h1>
+  <form action="{{ url_for('validate_login') }}" method="post" name="login">
+      {{ form.hidden_tag() }}
+      <p>
+          Please log in:<br>
+          {{ form.username }}<br>
+          {{ form.password }}<br>
+      </p>
+      <p>{{ form.submit }}
+  </form>
+<h1>Create Account</h1>
+<form action="{{ url_for('validate_create') }}" method="post" name="create">
+      {{ form.hidden_tag() }}
+      <p>
+          Please enter username and password to create account:<br>
+          {{ form.create_username }}<br>
+          {{ form.create_password }}<br>
+      </p>
+      <p>{{ form.create_acct }}
+  </form>
+
+{% endblock %}
