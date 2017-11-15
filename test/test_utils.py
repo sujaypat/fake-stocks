@@ -22,7 +22,7 @@ class TestUtilMethods(unittest.TestCase):
         u = User(username='john', password=hashlib.sha512('qwerty'.encode('utf-8')).digest(), bank_balance=0)
         db.session.add(u)
         db.session.commit()
-        u = User(username='bob', password=hashlib.sha512('uiop'.encode('utf-8')).digest())
+        u = User(username='bob', password=hashlib.sha512('uiop'.encode('utf-8')).digest(), bank_balance=0)
         db.session.add(u)
         db.session.commit()
         res = utils.read_user_from_db('john', 'qwerty')

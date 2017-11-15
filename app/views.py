@@ -34,6 +34,9 @@ def validate_create():
                         bank_balance=0)
         db.session.add(u)
         db.session.commit()
+    else:
+        flash("username already exists")
+        return redirect('/login')
     return render_template('index.html',
                            title='Home',
                            user=u)
