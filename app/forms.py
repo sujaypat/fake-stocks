@@ -1,8 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField
-from wtforms.validators import DataRequired
+from wtforms import StringField, PasswordField, SubmitField
+from app import utils
 
 
 class LoginForm(FlaskForm):
-    openid = StringField('openid', validators=[DataRequired()])
-    remember_me = BooleanField('remember_me', default=False)
+    username = StringField('username')
+    password = PasswordField('password')
+    submit = SubmitField('submit', )
+    create_username = StringField('username')
+    create_password = PasswordField('password')
+    create_acct = SubmitField('create')

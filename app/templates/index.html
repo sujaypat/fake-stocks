@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{{ title }} - microblog</title>
+  <title>{{ title }} - stocks</title>
 </head>
   <body>
     {% extends "base.html" %}
       {% block content %}
-      <h1>Hi, {{ user.nickname }}!</h1>
-      {% for post in posts %}
-        <div><p>{{ post.author.nickname }} says: <b>{{ post.body }}</b></p></div>
+      <h1>Hi, {{ user.username }}!</h1>
+      {% for share in shares %}
+        <div><p>{{ share.user_id.username }} owns: <b>{{ share.ticker }}</b></p></div>
       {% endfor %}
     {% endblock %}
   </body>

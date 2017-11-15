@@ -6,3 +6,5 @@ wtforms
 requests
 json
 flask_sqlalchemy
+sqlalchemy-migrate
+hashlib
