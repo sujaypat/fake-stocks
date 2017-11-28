@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, flash
+from flask import render_template, redirect, request, flash, session
 from app import app, utils, models, db
 from .forms import LoginForm
 import hashlib
@@ -7,6 +7,10 @@ import hashlib
 @app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if session.get('user', None) is not None:
+        return render_template('index.html',
+                               title='Home',
+                               user=models.User.query.get(session['user']))
     form = LoginForm()
     return render_template('login.html',
                            title='Sign In',
@@ -19,6 +23,8 @@ def validate_login():
     if not user:
         flash("incorrect username or password")
         return redirect('/login')
+    print('about to save user')
+    session['user'] = user.username
     return render_template('index.html',
                            title='Home',
                            user=user)
@@ -28,7 +34,7 @@ def validate_login():
 def validate_create():
     print(request, request.form)
     u = None
-    if not utils.read_user_from_db(request.form['create_username'], request.form['create_password']):
+    if not utils.username_exists(request.form['create_username']):
         u = models.User(username=request.form['create_username'],
                         password=hashlib.sha512(request.form['create_password'].encode('utf-8')).digest(),
                         bank_balance=0)
@@ -37,6 +43,13 @@ def validate_create():
     else:
         flash("username already exists")
         return redirect('/login')
+    session['user'] = u.username
     return render_template('index.html',
                            title='Home',
                            user=u)
+
+
+@app.route('/logout')
+def logout():
+    session['user'] = None
+    return redirect('/login')

@@ -15,7 +15,6 @@ class User(db.Model):
 class Share(db.Model):
     id = db.Column(db.Integer, index=True, primary_key=True)
     ticker = db.Column(db.String(4), index=True)
-    value = db.Column(db.Float)
     count = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
