@@ -30,18 +30,19 @@ class TestUtilMethods(unittest.TestCase):
         assert(res.bank_balance == 0)
 
     def test_add_read_share(self):
-        s = Share(ticker='AAPL', value=430.65, count=7, user_id=1)
+        s = Share(ticker='aapl', count=7, user_id=1)
         db.session.add(s)
         db.session.commit()
         res = Share.query.get(1)
-        assert(res.value == 430.65)
         assert(res.count == 7)
 
     def test_get_data_for_symbol(self):
         code, resp = utils.get_data_for_symbol('AAPL')
         assert(code == 200)
-        assert(resp[0]['symbol'] == 'AAPL')
-        assert(resp[0]['id'] == '22144')
+
+    def test_get_current_price(self):
+        price = utils.get_current_price('aapl')
+        assert(price > 150)
 
 
 if __name__ == '__main__':
