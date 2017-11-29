@@ -4,7 +4,7 @@ from app import db
 class User(db.Model):
     id = db.Column(db.Integer, index=True)
     username = db.Column(db.String(120), index=True, unique=True, primary_key=True)
-    bank_balance = db.Column(db.Integer)
+    bank_balance = db.Column(db.Float)
     password = db.Column(db.String(64), index=True)
     shares = db.relationship('Share', backref='owner', lazy='dynamic')
 

@@ -1,7 +1,7 @@
 import requests
 import json
 import hashlib
-from app import models, db
+from app import models
 
 API_KEY = 'Y7NVICPUUJESAGD0'
 
@@ -11,8 +11,9 @@ def get_data_for_symbol(ticker):
     :param ticker: string of ticker symbol
     :return: tuple with status code and response json
     """
-    url = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&interval=5min&symbol=%s&apikey=%s' % (ticker, API_KEY)
+    url = 'http://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&interval=5min&symbol=%s&apikey=%s' % (ticker.lower(), API_KEY)
     response = requests.get(url)
+    print(url)
     return response.status_code, list(json.loads(response.text.strip())['Time Series (5min)'].items())
 
 
@@ -40,34 +41,12 @@ def username_exists(username):
 
 
 def get_current_price(ticker):
+    """
+
+    :param ticker: stock ticker
+    :return: latest price for that ticker on 5 min interval
+    """
     resp, data = get_data_for_symbol(ticker)
     print(resp)
     print(data[0][1]['4. close'])
     return float(data[0][1]['4. close'])
-
-
-def buy_stock(username, ticker, num_shares):
-    u = username_exists(username)
-    price = get_current_price(ticker)
-    if not u:
-        return False
-
-    shares = u.shares.query.get(ticker=ticker)
-    if u.bank_balance > price*num_shares:
-        shares.count += num_shares
-        u.bank_balance -= price*num_shares
-        db.session.commit()
-
-
-def sell_stock(username, ticker, num_shares):
-    u = username_exists(username)
-    price = get_current_price(ticker)
-    if not u:
-        return False
-
-    shares = u.shares.query.get(ticker=ticker)
-    if u.shares > num_shares:
-        shares.count -= num_shares
-        u.bank_balance += num_shares*price
-        db.session.commit()
-        return True

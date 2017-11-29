@@ -6,9 +6,28 @@
   <body>
     {% extends "base.html" %}
       {% block content %}
-      <h1>Hi, {{ user.username }}!</h1>
+      <h1>Hi, {{ user.username }}!</h1> Funds: {{ user.bank_balance }}
+      <form action="{{ url_for('add_remove_funds') }}" method="post" name="funds">
+      <h3>Add funds</h3> {{ form.funds_amt }} {{ form.funds_submit }}<br>
+      </form>
+      <h3>Buy</h3> <br>
+      <form action="{{ url_for('buy_stock') }}" method="post" name="buy">
+      Symbol:{{ form.buy_ticker }}<br>
+      Quantity:{{ form.buy_num }}<br>
+      {{ form.buy_submit }}<br>
+      </form>
+
+      <h3>Sell</h3> <br>
+      <form action="{{ url_for('sell_stock') }}" method="post" name="sell">
+      Symbol:{{ form.sell_ticker }} <br>
+      Quantity:{{ form.sell_num }} <br>
+      {{ form.sell_submit }} <br>
+      </form>
+
+
+      <h3>Shares</h3> <br>
       {% for share in shares %}
-        <div><p>{{ share.user_id.username }} owns: <b>{{ share.ticker }}</b></p></div>
+        <div><p>{{ share.user_id.username }} owns: <b>{{ share.ticker }} x {{ share.count }}</b></p></div>
       {% endfor %}
     {% endblock %}
   </body>
