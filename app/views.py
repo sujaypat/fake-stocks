@@ -2,6 +2,7 @@ from flask import render_template, redirect, request, flash, session
 from app import app, utils, db
 from .forms import LoginForm, TransactionForm
 from app.utils import *
+from app.models import User, Share
 import hashlib
 
 
@@ -13,7 +14,8 @@ def login():
         return render_template('index.html',
                                title='Home',
                                user=models.User.query.get(session['user']),
-                               form=form)
+                               form=form,
+                               shares=Share.query.filter_by(user_id=User.query.get(session['user']).id).all())
     form = LoginForm()
     return render_template('login.html',
                            title='Sign In',
@@ -32,7 +34,8 @@ def validate_login():
     return render_template('index.html',
                            title='Home',
                            user=user,
-                           form=form)
+                           form=form,
+                           shares=Share.query.filter_by(user_id=User.query.get(session['user']).id).all())
 
 
 @app.route('/create', methods=['POST'])
@@ -53,7 +56,8 @@ def validate_create():
     return render_template('index.html',
                            title='Home',
                            user=u,
-                           form=form)
+                           form=form,
+                           shares=Share.query.filter_by(user_id=User.query.get(session['user']).id).all())
 
 
 @app.route('/logout')
@@ -76,16 +80,17 @@ def buy_stock():
     if not u:
         return redirect('/')
 
-    shares = models.Share.query.filter_by(ticker=form.buy_ticker.data.lower()).first()
+    shares = Share.query.filter_by(ticker=form.buy_ticker.data.lower()).first()
     print(shares)
-    if not shares:
-        s = models.Share(ticker=form.buy_ticker.data.lower(), count=int(form.buy_num.data), user_id=u.id)
+    if not shares and u.bank_balance >= price*int(form.buy_num.data):
+        s = Share(ticker=form.buy_ticker.data.lower(), count=int(form.buy_num.data), user_id=u.id)
         u.bank_balance -= price * int(form.buy_num.data)
         db.session.add(s)
         db.session.commit()
         return redirect('/')
 
     if u.bank_balance >= price*int(form.buy_num.data):
+        print('good to buy')
         shares.count += int(form.buy_num.data)
         u.bank_balance -= price*int(form.buy_num.data)
         db.session.commit()
@@ -108,7 +113,7 @@ def sell_stock():
     if not u:
         return False
 
-    shares = models.Share.query.filter_by(ticker=form.sell_ticker.data.lower()).first()
+    shares = Share.query.filter_by(ticker=form.sell_ticker.data.lower()).first()
     print(shares)
     if not shares:
         flash('you do not own this stock')
