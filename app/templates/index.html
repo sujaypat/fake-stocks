@@ -1,95 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{{ title }} - stocks</title>
-  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">-->
-  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
-  <link rel=stylesheet type=text/css href="../static/css/style.css">
+    <title>{{ title }} - stocks</title>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
 
-  <!-- Compiled and minified CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+        })
+    </script>
 
 </head>
-  <body>
+<body>
 
-  <nav>
+<nav>
     <div class="nav-wrapper teal accent-4">
-      <a href="#" class="brand-logo">Robin Wood</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li>Hello, {{ user.username }}.</li>
-        <li><a href="/logout">Logout</a></li>
-      </ul>
+        <a href="#!" class="brand-logo">Robin Wood</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li>Hello, {{ user.username }}</li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li><a>Hello, {{ user.username }}</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
     </div>
-  </nav>
+</nav>
 
-    {% extends "base.html" %}
-      {% block content %}
-      <br>
-      <div class="container">
-          <div class="card teal darken-4 ">
-            <div class="card-content white-text">
-              <span class="card-title">Current Funds: {{'%0.2f' % user.bank_balance|float}}</span>
-              <form action="{{ url_for('add_remove_funds') }}" method="post" name="funds">
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="card teal darken-4 ">
+        <div class="card-content white-text">
+            <span class="card-title">Current Funds: {{'%0.2f' % user.bank_balance|float}}</span>
+            <form action="{{ url_for('add_remove_funds') }}" method="post" name="funds">
                 <h4>Add funds</h4> {{ form.funds_amt }} <br> {{ form.funds_submit }} <br>
-              </form>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="card teal darken-4">
+        <div class="card-content white-text">
+            <div id="buy">
+                <h3>Buy</h3>
+                <form action="{{ url_for('buy_stock') }}" method="post" name="buy">
+                    Symbol:{{ form.buy_ticker }}<br>
+                    Quantity:{{ form.buy_num }}<br>
+                    {{ form.buy_submit }}<br>
+                </form>
             </div>
-          </div>
-      </div>
-
-
-        <div class="container">
-          <div class="card teal darken-4">
-            <div class="card-content white-text">
-                <div id="buy">
-                  <h3>Buy</h3>
-                  <form action="{{ url_for('buy_stock') }}" method="post" name="buy">
-                  Symbol:{{ form.buy_ticker }}<br>
-                  Quantity:{{ form.buy_num }}<br>
-                  {{ form.buy_submit }}<br>
-                  </form>
-                </div>
-              </div>
-          </div>
         </div>
-      <br>
+    </div>
+</div>
+<br>
 
 
-        <div class="container">
-          <div class="card teal darken-4">
-            <div class="card-content white-text">
-                <div id="sell">
-                  <h3>Sell</h3>
-                  <form action="{{ url_for('sell_stock') }}" method="post" name="sell">
-                  Symbol:{{ form.sell_ticker }} <br>
-                  Quantity:{{ form.sell_num }} <br>
-                  {{ form.sell_submit }} <br>
-                  </form>
-                </div>
-              </div>
-          </div>
+<div class="container">
+    <div class="card teal darken-4">
+        <div class="card-content white-text">
+            <div id="sell">
+                <h3>Sell</h3>
+                <form action="{{ url_for('sell_stock') }}" method="post" name="sell">
+                    Symbol:{{ form.sell_ticker }} <br>
+                    Quantity:{{ form.sell_num }} <br>
+                    {{ form.sell_submit }} <br>
+                </form>
+            </div>
         </div>
-      <br>
+    </div>
+</div>
+<br>
 
 
-      <div class="container">
-      <ul class="collection with-header ">
+<div class="container">
+    <ul class="collection with-header ">
         <li class="collection-header teal lighten-2"><h4>Shares</h4></li>
         {% for share in shares if share.count > 0%}
-            <li class="collection-item teal lighten-4"><div>{{ share.ticker }}<div href="#!" class="secondary-content">{{ share.count }}</div></div></li>
+        <li class="collection-item teal lighten-4">
+            <div>{{ share.ticker }}
+                <div href="#!" class="secondary-content">{{ share.count }}</div>
+            </div>
+        </li>
         {% endfor %}
-      </ul>
-      </div>
+    </ul>
+</div>
 
 
-
-    {% endblock %}
-
+{% endblock %}
 
 
-
-
-  </body>
+</body>
 </html>
