@@ -5,7 +5,7 @@ from wtforms import StringField, PasswordField, SubmitField
 class LoginForm(FlaskForm):
     username = StringField('username')
     password = PasswordField('password')
-    submit = SubmitField('submit', )
+    submit = SubmitField('log in')
     create_username = StringField('username')
     create_password = PasswordField('password')
     create_acct = SubmitField('create')
@@ -17,8 +17,8 @@ class TransactionForm(FlaskForm):
 
     buy_ticker = StringField('buy_ticker')
     buy_num = StringField('buy_num')
-    buy_submit = SubmitField('submit')
+    buy_submit = SubmitField('buy')
 
     sell_ticker = StringField('sell_ticker')
     sell_num = StringField('sell_num')
-    sell_submit = SubmitField('submit')
+    sell_submit = SubmitField('sell')
