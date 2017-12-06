@@ -1,34 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{{ title }} - stocks</title>
+    <title>{{ title }} - stocks</title>
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
+
+
+    <!-- Compiled and minified CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".button-collapse").sideNav();
+        })
+    </script>
+
 </head>
-  <body>
-    {% extends "base.html" %}
-      {% block content %}
-      <h1>Hi, {{ user.username }}!</h1> Funds: {{ user.bank_balance }}
-      <form action="{{ url_for('add_remove_funds') }}" method="post" name="funds">
-      <h3>Add funds</h3> {{ form.funds_amt }} {{ form.funds_submit }}<br>
-      </form>
-      <h3>Buy</h3> <br>
-      <form action="{{ url_for('buy_stock') }}" method="post" name="buy">
-      Symbol:{{ form.buy_ticker }}<br>
-      Quantity:{{ form.buy_num }}<br>
-      {{ form.buy_submit }}<br>
-      </form>
+<body>
 
-      <h3>Sell</h3> <br>
-      <form action="{{ url_for('sell_stock') }}" method="post" name="sell">
-      Symbol:{{ form.sell_ticker }} <br>
-      Quantity:{{ form.sell_num }} <br>
-      {{ form.sell_submit }} <br>
-      </form>
+<nav>
+    <div class="nav-wrapper blue accent-4">
+        <a href="#!" class="brand-logo">Mock Stocks</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li>Hello, {{ user.username }}</li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li><a>Hello, {{ user.username }}</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+{% extends "base.html" %}
+{% block content %}
+<br>
+<div class="container">
+    <div class="card blue darken-4 ">
+        <div class="card-content white-text">
+            <span class="card-title">Current Funds: {{'%0.2f' % user.bank_balance|float}}</span>
+            <form action="{{ url_for('add_remove_funds') }}" method="post" name="funds">
+                <h4>Add Funds</h4>
+                {{ form.funds_amt }} <br>
+                {{ form.funds_submit(class="card-action") }} <br>
+            </form>
+        </div>
+    </div>
+</div>
 
 
-      <h3>Shares</h3> <br>
-      {% for share in shares %}
-        <div><p>{{ share.user_id.username }} owns: <b>{{ share.ticker }} x {{ share.count }}</b></p></div>
-      {% endfor %}
-    {% endblock %}
-  </body>
+<div class="container">
+    <div class="card blue darken-4">
+        <div class="card-content white-text">
+            <div id="buy">
+                <h3>Buy</h3>
+                <form action="{{ url_for('buy_stock') }}" method="post" name="buy">
+                    Symbol:{{ form.buy_ticker }}<br>
+                    Quantity:{{ form.buy_num }}<br>
+                    {{ form.buy_submit(class="card-action") }}<br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+
+<div class="container">
+    <div class="card blue darken-4">
+        <div class="card-content white-text">
+            <div id="sell">
+                <h3>Sell</h3>
+                <form action="{{ url_for('sell_stock') }}" method="post" name="sell">
+                    Symbol:{{ form.sell_ticker }} <br>
+                    Quantity:{{ form.sell_num }} <br>
+                    {{ form.sell_submit(class="card-action") }} <br>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+
+<div class="container">
+    <ul class="collection with-header ">
+        <li class="collection-header blue lighten-2"><h4>Shares</h4></li>
+        {% for share in shares if share.count > 0%}
+        <li class="collection-item blue lighten-4">
+            <div>{{ share.ticker|upper }}
+                <div href="#!" class="secondary-content">{{ share.count }}</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}
+
+
+</body>
 </html>
