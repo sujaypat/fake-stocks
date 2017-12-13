@@ -26,14 +26,16 @@
 
 <nav>
     <div class="nav-wrapper blue accent-4">
-        <a href="#!" class="brand-logo">Mock Stocks</a>
+        <a href="/" class="brand-logo">Mock Stocks</a>
         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-            <li>Hello, {{ user.username }}</li>
+            <li>Hello, {{ user.username }}  </li>
+            <li><a href="/stats">Stats</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
         <ul class="side-nav" id="mobile-demo">
-            <li><a>Hello, {{ user.username }}</a></li>
+            <li><a>Hello, {{ user.username }}   </a></li>
+            <li><a href="/stats">Stats</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
     </div>

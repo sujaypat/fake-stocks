@@ -4,6 +4,10 @@ from .forms import LoginForm, TransactionForm
 from app.utils import *
 from app.models import User, Share
 import hashlib
+import base64
+import matplotlib.pyplot as plt
+import multiprocessing, threading
+from joblib import Parallel, delayed
 
 
 @app.route('/')
@@ -136,6 +140,40 @@ def add_remove_funds():
     if not u:
         return False
 
-    u.bank_balance += int(form.funds_amt.data)
+    u.bank_balance += float(form.funds_amt.data)
     db.session.commit()
     return redirect('/')
+
+
+@app.route('/stats')
+def render_charts():
+    u = username_exists(session['user'])
+    shares = Share.query.filter_by(user_id=User.query.get(session['user']).id).all()
+    historical = []
+    # threading.current_thread().name = 'MainThread'
+    # num_cores = multiprocessing.cpu_count()
+    # Parallel(n_jobs=num_cores)(delayed(gen_chart)(historical, s) for s in shares)
+    for share in shares:
+        _, resp = get_data_for_symbol(share.ticker)
+        templist = [x for x in resp[::-1]]
+        for i in range(len(templist)):
+            templist[i] = (templist[i][0], float(templist[i][1]['4. close']))
+        labels = [a for (a, b) in templist[::2]]
+        values = [b for (a, b) in templist[::2]]
+        plt.figure(figsize=(10, 6))
+        x = range(len(values))
+        plt.xticks(range(len(values)), labels, rotation=90)  # writes strings with 45 degree angle
+        plt.plot(x, values)
+        plt.title('%s historical plot' % share.ticker)
+        plt.tight_layout()
+
+        from io import BytesIO
+        figure = BytesIO()
+        plt.savefig(figure, format='png')
+        figure.seek(0)
+        figdata_png = base64.b64encode(figure.getvalue())
+        historical.append(figdata_png.decode('utf8'))
+    return render_template('stats.html',
+                           title='Statistics',
+                           user=u,
+                           shares=historical)

@@ -8,3 +8,5 @@ json
 flask_sqlalchemy
 sqlalchemy-migrate
 hashlib
+matplotlib
+joblib
